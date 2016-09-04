@@ -36,7 +36,7 @@ getShadedColor(Primitive const & primitive, Vec3 const & pos, Ray const & ray)
 	RGB C = primitive.getColor();
 	Material material = primitive.getMaterial();
 	double m_sm = material.getMSM();
-	RGB S = m_sm*C + (1.0 - m_sm)*RGB(255,255,255);
+	RGB S = m_sm*C + (1.0 - m_sm)*RGB(1,1,1);
 	double m_a = material.getMA();
 	double m_l = material.getML();
 	double m_s = material.getMS();
@@ -53,11 +53,11 @@ getShadedColor(Primitive const & primitive, Vec3 const & pos, Ray const & ray)
 		{
 			if(use_dist)
 			{
-				if(shadow_ray.minT()<=1.0) continue;
+				if(shadow_ray.minT()<=1.001 && shadow_ray.minT()>0.001) {continue;}
 			}
 			else
 			{
-				if(shadow_ray.minT()>0.0) continue;
+				if(shadow_ray.minT()>0.001) {continue;}
 			}
 		}
 		RGB I = (*mylight)->getColor(pos);
@@ -92,7 +92,14 @@ traceRay(Ray & ray, int depth)
 		Vec3 pos = ray.getPos(ray.minT());
 		//Primitive primitive = *(intersected_primitive);
 		Ray new_ray;
-		return getShadedColor((*intersected_primitive),pos,ray);
+		Vec3 dir = -ray.direction();
+		dir = dir.normalize();
+		Vec3 normal = intersected_primitive->calculateNormal(pos);
+		Vec3 new_dir = -dir + 2.0*(dir*normal)*normal;
+		new_dir = new_dir.normalize();
+		new_ray = new_ray.fromOriginAndDirection(pos+0.001*new_dir,new_dir);
+		double m_r = intersected_primitive->getMaterial().getMR();
+		return getShadedColor((*intersected_primitive),pos,ray) + m_r*traceRay(new_ray,depth+1);
 	}
 }
 

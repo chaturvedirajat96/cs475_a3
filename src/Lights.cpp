@@ -143,7 +143,7 @@ DirectionalLight::getShadowRay(Vec3 const & position, bool & use_dist) const
   //IMPLEMENT_ME(__FILE__, __LINE__);
 	Vec3 e = position;											// set origin of ray
 	Vec3 d = -dir_;									// set direction of ray
-	use_dist = false;											// use_dist = true
+	use_dist = false;											// use_dist = false
 	Ray myRay;
 	return myRay.fromOriginAndDirection(e,d);
 }

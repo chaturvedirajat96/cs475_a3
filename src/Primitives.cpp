@@ -43,9 +43,9 @@ Sphere::intersect(Ray & ray) const
 	double pos_root = (1.0/(d*d))*(-d*e + sqrt(discriminant));
 	double neg_root = (1.0/(d*d))*(-d*e - sqrt(discriminant));
 
-	if(pos_root>0.0 && pos_root<ray.minT()) {ray.setMinT(pos_root);}
+	if(pos_root>0.001 && pos_root<ray.minT()) {ray.setMinT(pos_root);}
 
-	if(neg_root>0.0 && neg_root<ray.minT()) {ray.setMinT(neg_root);}
+	if(neg_root>0.001 && neg_root<ray.minT()) {ray.setMinT(neg_root);}
 
 	if(min_t>ray.minT()) {return true;}
 	else {return false;}
